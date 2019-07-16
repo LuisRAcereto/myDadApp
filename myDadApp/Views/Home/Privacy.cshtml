@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <h1 class="display-4">Chuck says...</h1>
+    <p>Wisdom from Chuck is from the api at https://api.chucknorris.io</p>
+</div>
+
+<h2 class="jumbotron font-weight-bold" style="background-color:salmon;" id="joke"></h2>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.chucknorris.io/jokes/random',
+            dataType: 'json',
+            success: function (msg) {
+                $('#joke').html(msg.value);
+
+            },
+            error: function (request, status, error) {
+                $('#joke').html("Error getting joke");
+            }
+        });
+    });
+
+
+</script>
