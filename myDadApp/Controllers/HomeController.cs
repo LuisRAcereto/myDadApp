@@ -25,6 +25,11 @@ namespace myDadApp.Controllers
             return View();
         }
 
+        public IActionResult Controls()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
