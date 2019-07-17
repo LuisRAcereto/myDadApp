@@ -1,0 +1,27 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Config
+
+@{
+    ViewData["Title"] = "Permit To Cloud";
+}
+
+<div class="text-center">
+    <h1 class="display-4">my Permit to Cloud </h1>
+    <h3>running in @Config["EnvName"]</h3>
+</div>
+
+
+<div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active"><img src="~/images/Picture01.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture02.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture03.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture04.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture05.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture06.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture07.png" style="height:200px;" /></div>
+        <div class="carousel-item"><img src="~/images/Picture08.png" style="height:200px;" /></div>
+    </div>
+</div>
+
+<h5>Learn more about Permit to Cloud at <a href="https://www.benkotips.com">www.benkoTIPS.com</a></h5>
