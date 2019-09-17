@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace myDadApp
 {
@@ -39,6 +43,25 @@ namespace myDadApp
             services.AddDbContext<myDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("myDataContext")));
 
+            // MB: Add Storage for uploads
+
+            CloudStorageAccount AzAcct = CloudStorageAccount.Parse(Configuration.GetConnectionString("myStorage"));
+
+            var azTableClient = AzAcct.CreateCloudTableClient();
+            CloudTable azTable = azTableClient.GetTableReference("Uploads");
+            azTable.CreateIfNotExistsAsync();
+            services.AddSingleton<CloudTable>(azTable);
+
+            var azBlobClient = AzAcct.CreateCloudBlobClient();
+            var azContainer = azBlobClient.GetContainerReference("uploads");
+            azContainer.CreateIfNotExistsAsync();
+            services.AddSingleton<CloudBlobContainer>(azContainer);
+
+            var azQClient = AzAcct.CreateCloudQueueClient();
+            var azQueue = azQClient.GetQueueReference("new-uploads");
+            azQueue.CreateIfNotExistsAsync();
+            services.AddSingleton<CloudQueue>(azQueue);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +86,7 @@ namespace myDadApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Uploads}/{action=Index}/{id?}");
             });
 
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
