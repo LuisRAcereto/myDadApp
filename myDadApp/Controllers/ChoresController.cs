@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
 
@@ -12,16 +13,32 @@ namespace myDadApp.Controllers
     public class ChoresController : Controller
     {
         private readonly myDataContext _context;
-
-        public ChoresController(myDataContext context)
+        private readonly Container _cosmos;
+        public ChoresController(myDataContext context, Container cosmos)
         {
             _context = context;
+            _cosmos = cosmos;
         }
 
         // GET: Chores
         public async Task<IActionResult> Index()
         {
+            return View(await GetCosmosItems());
             return View(await _context.Chore.ToListAsync());
+        }
+
+        private async Task<List<Chore>> GetCosmosItems()
+        {
+            var myData = new List<Chore>();
+            var myQuery = new QueryDefinition("Select * from c where c.IsDone != true");
+            var myFeed = _cosmos.GetItemQueryIterator<Chore>(myQuery);
+
+            while (myFeed.HasMoreResults)
+            {
+                var set = await myFeed.ReadNextAsync();
+                myData.AddRange(set);
+            }
+            return myData;
         }
 
         // GET: Chores/Details/5
@@ -57,6 +74,9 @@ namespace myDadApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                // MB: Add to Cosmos
+                await _cosmos.CreateItemAsync<Chore>(chore);
+
                 _context.Add(chore);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -96,6 +116,7 @@ namespace myDadApp.Controllers
             {
                 try
                 {
+                    // MB: Set the completeDt if it's done
                     if (chore.IsDone == true)
                     {
                         chore.CompleteDt = DateTime.UtcNow;
@@ -103,6 +124,10 @@ namespace myDadApp.Controllers
                     {
                         chore.CompleteDt = null;
                     }
+                    
+                    // MB: Upsert the cosmos item if it's done
+                    await _cosmos.UpsertItemAsync<Chore>(chore);
+
                     _context.Update(chore);
                     await _context.SaveChangesAsync();
                 }

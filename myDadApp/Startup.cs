@@ -15,6 +15,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.Azure.Cosmos;
 
 namespace myDadApp
 {
@@ -43,23 +44,29 @@ namespace myDadApp
             services.AddDbContext<myDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("myDataContext")));
 
-            // MB: Add Storage for uploads
+            // MB: Add Cosmos
+            var client = new CosmosClient(Configuration.GetConnectionString("myCosmos"));
+            Database db = client.CreateDatabaseIfNotExistsAsync("myDadApp").Result;
+            Container myCosmos = db.CreateContainerIfNotExistsAsync("Chores", "/Owner", 400).Result;
+            services.AddSingleton<Container>(myCosmos);
 
+
+            // MB: Add Storage for uploads
             CloudStorageAccount AzAcct = CloudStorageAccount.Parse(Configuration.GetConnectionString("myStorage"));
 
             var azTableClient = AzAcct.CreateCloudTableClient();
             CloudTable azTable = azTableClient.GetTableReference("Uploads");
-            azTable.CreateIfNotExistsAsync();
+            var rc = azTable.CreateIfNotExistsAsync().Result;
             services.AddSingleton<CloudTable>(azTable);
 
             var azBlobClient = AzAcct.CreateCloudBlobClient();
             var azContainer = azBlobClient.GetContainerReference("uploads");
-            azContainer.CreateIfNotExistsAsync();
+            rc = azContainer.CreateIfNotExistsAsync().Result;
             services.AddSingleton<CloudBlobContainer>(azContainer);
 
             var azQClient = AzAcct.CreateCloudQueueClient();
             var azQueue = azQClient.GetQueueReference("new-uploads");
-            azQueue.CreateIfNotExistsAsync();
+            rc = azQueue.CreateIfNotExistsAsync().Result;
             services.AddSingleton<CloudQueue>(azQueue);
 
         }
@@ -89,6 +96,7 @@ namespace myDadApp
                     template: "{controller=Uploads}/{action=Index}/{id?}");
             });
 
+            // MB: Add auto migrations
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetService<myDataContext>().Database.Migrate();
