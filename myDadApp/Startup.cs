@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using myDadApp.Models;
 
 namespace myDadApp
 {
@@ -35,10 +33,6 @@ namespace myDadApp
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddDbContext<myDataContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("myDataContext")));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,15 +57,8 @@ namespace myDadApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Chores}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                scope.ServiceProvider.GetService<myDataContext>().Database.Migrate();
-            }
-
-
         }
     }
 }
