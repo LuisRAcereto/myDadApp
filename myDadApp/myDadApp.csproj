@@ -3,11 +3,33 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>6973a087-7964-417e-bc07-83c10054b9f5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="myDadApp.csproj" />
     <None Include="myDadApp.csproj.user" />
+    <None Include="Properties\PublishProfiles\DadApp-web - Web Deploy.pubxml.user" />
+    <None Include="Views\Chores\Create.cshtml" />
+    <None Include="Views\Chores\Delete.cshtml" />
+    <None Include="Views\Chores\Details.cshtml" />
+    <None Include="Views\Chores\Edit.cshtml" />
+    <None Include="Views\Chores\Index.cshtml" />
+    <None Include="Views\Home\About.cshtml" />
+    <None Include="Views\Home\Controls.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Owners\Create.cshtml" />
+    <None Include="Views\Owners\Delete.cshtml" />
+    <None Include="Views\Owners\Details.cshtml" />
+    <None Include="Views\Owners\Edit.cshtml" />
+    <None Include="Views\Owners\Index.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_CookieConsentPartial.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
     <None Include="wwwroot\css\site.css" />
     <None Include="wwwroot\favicon.ico" />
     <None Include="wwwroot\images\Picture01.png" />
@@ -67,6 +89,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 

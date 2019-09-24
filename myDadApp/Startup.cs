@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
+using Microsoft.Azure.Cosmos;
 
 namespace myDadApp
 {
@@ -39,6 +40,11 @@ namespace myDadApp
             services.AddDbContext<myDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("myDataContext")));
 
+            // MB: Add Cosmos
+            var client = new CosmosClient(Configuration.GetConnectionString("myCosmos"));
+            Database db = client.CreateDatabaseIfNotExistsAsync("myDadApp").Result;
+            Container myCosmos = db.CreateContainerIfNotExistsAsync("Chores", "/Owner", 400).Result;
+            services.AddSingleton<Container>(myCosmos);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace myDadApp.Models
 {
     public class Chore
     {
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
