@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
 using Microsoft.Azure.Cosmos;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace myDadApp
 {
@@ -45,6 +48,19 @@ namespace myDadApp
             Database db = client.CreateDatabaseIfNotExistsAsync("myDadApp").Result;
             Container myCosmos = db.CreateContainerIfNotExistsAsync("Chores", "/Owner", 400).Result;
             services.AddSingleton<Container>(myCosmos);
+
+            // MB: Add Azure Storage
+            CloudStorageAccount AzAcct = CloudStorageAccount.Parse(Configuration.GetConnectionString("myStorage"));
+
+            var azBlobClient = AzAcct.CreateCloudBlobClient();
+            var azContainer = azBlobClient.GetContainerReference("uploads");
+            var rc = azContainer.CreateIfNotExistsAsync().Result;
+            services.AddSingleton<CloudBlobContainer>(azContainer);
+
+            var AzTableClient = AzAcct.CreateCloudTableClient();
+            var azTable = AzTableClient.GetTableReference("uploads");
+            rc = azTable.CreateIfNotExistsAsync().Result;
+            services.AddSingleton<CloudTable>(azTable);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,7 +85,7 @@ namespace myDadApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Chores}/{action=Index}/{id?}");
+                    template: "{controller=Uploads}/{action=Index}/{id?}");
             });
 
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
