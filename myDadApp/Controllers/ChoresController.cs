@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using myDadApp.Models;
 
 namespace myDadApp.Controllers
 {
+    [Authorize]
     public class ChoresController : Controller
     {
         private readonly myDataContext _context;
@@ -21,7 +23,10 @@ namespace myDadApp.Controllers
         // GET: Chores
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Chore.ToListAsync());
+            return View(await _context.Chore
+                .Where(c => c.Owner == User.Identity.Name)
+                .OrderByDescending(c => c.CreateDt)
+                .ToListAsync());
         }
 
         // GET: Chores/Details/5
@@ -57,6 +62,7 @@ namespace myDadApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                chore.Owner = User.Identity.Name;
                 _context.Add(chore);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -85,7 +91,7 @@ namespace myDadApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Title,Description,Owner,IsDone,CreateDt,CompleteDt")] Chore chore)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Title,Description,IsDone,CreateDt,CompleteDt")] Chore chore)
         {
             if (id != chore.Id)
             {
@@ -96,10 +102,11 @@ namespace myDadApp.Controllers
             {
                 try
                 {
-                    if (chore.IsDone == true)
+                    if (chore.IsDone == true && chore.CompleteDt == null)
                     {
                         chore.CompleteDt = DateTime.UtcNow;
-                    } else
+                    } 
+                    else
                     {
                         chore.CompleteDt = null;
                     }
