@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace myDadApp.Models
 {
-    public class myDataContext : IdentityDbContext<IdentityUser>
+    public class myDataContext : IdentityDbContext<MyAppUser>
     {
         public myDataContext (DbContextOptions<myDataContext> options)
             : base(options)

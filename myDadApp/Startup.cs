@@ -36,7 +36,7 @@ namespace myDadApp
             });
             
             // MB: Add default identity
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<MyAppUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<myDataContext>();
 

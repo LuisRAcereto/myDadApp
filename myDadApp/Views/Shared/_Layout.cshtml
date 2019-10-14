@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<MyAppUser> SignInManager
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +35,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li><a class="nav-link text-dark" asp-controller="Chores" asp-action="Index">myChores</a></li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            if (User.Identity.Name.Contains("dad"))
+                            {
+                                <li><a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a></li>
+                            }
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>

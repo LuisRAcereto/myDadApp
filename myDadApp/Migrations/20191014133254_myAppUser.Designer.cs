@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using myDadApp.Models;
 
 namespace myDadApp.Migrations
 {
     [DbContext(typeof(myDataContext))]
-    partial class myDataContextModelSnapshot : ModelSnapshot
+    [Migration("20191014133254_myAppUser")]
+    partial class myAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,8 +163,6 @@ namespace myDadApp.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
-
-                    b.Property<int>("ChoreCnt");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
