@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
 
@@ -14,20 +15,45 @@ namespace myDadApp.Controllers
     public class ChoresController : Controller
     {
         private readonly myDataContext _context;
+        private readonly Container _cosmos;
 
-        public ChoresController(myDataContext context)
+        public ChoresController(myDataContext context, Container cosmos)
         {
+            _cosmos = cosmos;
             _context = context;
         }
 
         // GET: Chores
         public async Task<IActionResult> Index()
         {
+            // From Cosmos
+            return View(await GetCosmosItems());
+
+
             return View(await _context.Chore
                 .Where(c => c.Owner == User.Identity.Name)
                 .OrderByDescending(c => c.CreateDt)
                 .ToListAsync());
         }
+
+        private async Task<List<Chore>> GetCosmosItems()
+        {
+            List<Chore> myData = new List<Chore>();
+
+            // Read a single query page from Azure cosmos DB as stream
+            var myQueryDef = new Microsoft.Azure.Cosmos.QueryDefinition($"Select * from f where f.IsDone != true");
+
+            var feedIterator = _cosmos.GetItemQueryIterator<Chore>(myQueryDef);
+
+            while (feedIterator.HasMoreResults)
+            {
+                var set = await feedIterator.ReadNextAsync();
+                myData.AddRange(set);
+            }
+            return myData.OrderBy(c=>c.CreateDt).ToList();
+        }
+
+
 
         // GET: Chores/Details/5
         public async Task<IActionResult> Details(string id)
@@ -63,6 +89,10 @@ namespace myDadApp.Controllers
             if (ModelState.IsValid)
             {
                 chore.Owner = User.Identity.Name;
+
+                // MB: Add cosmos item
+                await _cosmos.CreateItemAsync(chore);
+
                 _context.Add(chore);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -110,6 +140,10 @@ namespace myDadApp.Controllers
                     {
                         chore.CompleteDt = null;
                     }
+
+                    // MB: Update Cosmos
+                    await _cosmos.UpsertItemAsync(chore);
+
                     _context.Update(chore);
                     await _context.SaveChangesAsync();
                 }

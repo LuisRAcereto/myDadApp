@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using myDadApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.Azure.Cosmos;
 
 namespace myDadApp
 {
@@ -44,6 +45,13 @@ namespace myDadApp
 
             services.AddDbContext<myDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("myDataContext")));
+
+            // MB: Configure Cosmos
+            var client = new CosmosClient(Configuration.GetConnectionString("myCosmos"));
+            Database db = client.CreateDatabaseIfNotExistsAsync("myChores").Result;
+            Container myChores = db.CreateContainerIfNotExistsAsync("Chores", "/Owner", 400).Result;
+            services.AddSingleton<Container>(myChores);
+
 
         }
 
