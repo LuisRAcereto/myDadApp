@@ -49,9 +49,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - myDadApp - <a href="https://www.benkotips.com">BenkoTIPS.com</a>
-            - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-            
+            &copy; 2019 - myDadApp | <a href="https://www.benkotips.com">BenkoTIPS.com</a>
+            | <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+            | <b>Machine:</b> @System.Environment.MachineName
+            | <b>OS:</b> @System.Environment.OSVersion
+            | <b>Framework:</b> @System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription  
         </div>
     </footer>
 
