@@ -52,12 +52,12 @@
             &copy; 2020 - myDadApp | <a href="https://www.benkotips.com">BenkoTIPS.com</a>
             | <a asp-controller="Home" asp-action="Privacy">Privacy</a>
             <span class="d-none d-md-inline">
-                | <b>#{Build.BuildNumber}#</b>
-                | <b>Framework:</b> @System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription
+                | <b>Build:</b> #{Build.BuildNumber}#
             </span>
             <span class="d-none d-lg-inline">
-                | <b>Machine:</b> @System.Environment.MachineName
+                | <b>Framework:</b> @System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription
                 | <b>OS:</b> @System.Environment.OSVersion
+                | <b>Machine:</b> @System.Environment.MachineName
             </span>
         </div>
     </footer>
