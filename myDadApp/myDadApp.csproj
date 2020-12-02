@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".well-known\pki-validation\godaddy.html">
+    <Content Include="wwwroot\.well-known\pki-validation\godaddy.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
