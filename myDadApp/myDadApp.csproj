@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>50530ab1-4eb2-4fd0-8c9a-af631708d3a8</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/60d40218-88df-4965-83cf-e01ff5a7364f/resourceGroups/Default-Web-EastUS/providers/microsoft.insights/components/myDadApp-AI</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
