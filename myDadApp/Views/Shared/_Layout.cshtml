@@ -37,7 +37,7 @@
                         </li>
                         <li class="d-inline d-sm-none disabled">
                             <hr />
-                            <a class="disabled" style="color:gray;"><i><b>Build:</b> #{Build.BuildNumber}#</i></a>
+                            <a class="disabled" style="color:gray;"><i><b>Build:</b> #{Build.BuildNumber}# - #{Build.SourceVersion}#</i></a>
                         </li>
                     </ul>
                 </div>
@@ -56,7 +56,7 @@
             &copy; 2020 - myDadApp | <a href="https://www.benkotips.com">BenkoTIPS.com</a>
             | <a asp-controller="Home" asp-action="Privacy">Privacy</a>
             <span class="d-none d-md-inline">
-                | <b>Build:</b> #{Build.BuildNumber}#
+                | <b>Build:</b> #{Build.BuildNumber}# - #{Build.SourceVersion}
             </span>
             <span class="d-none d-lg-inline">
                 | <b>Framework:</b> @System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription
